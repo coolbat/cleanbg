@@ -1,0 +1,52 @@
+export const meta = {
+  title: 'remove.bg is shutting down on December 1, 2026 — here is a free alternative that never uploads your photos',
+  description:
+    'remove.bg is moving into Canva and its standalone site closes on 1 December 2026. What changes, what happens to credits and the API, and how to keep removing backgrounds for free without sending images to the cloud.',
+  created_at: '2026-09-18',
+  author_name: 'CleanBG',
+};
+
+## What remove.bg announced
+
+According to the official remove.bg FAQ, the standalone remove.bg website will no longer be available from **1 December 2026 at 9:00 CET**. Background removal is being folded into Canva, which acquired remove.bg in 2021. The key points:
+
+- **Consumers** are pointed to Canva's Background Remover, which lives inside the Canva editor.
+- **Self-serve API users** are directed to Leonardo.Ai (also owned by Canva), with a different authentication scheme and request format.
+- **Enterprise API contracts** continue unchanged.
+- **Unused pay-as-you-go credits expire** at the shutdown time — spend them before December 1.
+
+If you used remove.bg for quick one-off cutouts, the new path means opening a full design editor for every image, and for many people a Canva subscription.
+
+## What to look for in a replacement
+
+remove.bg set a high bar in three areas: it was fast, the edges (especially hair) were clean, and it needed no setup. When evaluating alternatives, add a fourth question that remove.bg never answered well: **where does my image go?**
+
+Every cloud remover uploads your photo to a server, runs the model there, and sends the result back. For product shots that is usually fine. For family photos, ID documents, unreleased designs or client work, it is a real privacy trade-off — and it is also why every cloud service has to charge per image or cap free usage.
+
+## Running the model in your browser instead
+
+Two things changed since remove.bg launched in 2018. Browsers gained **WebGPU**, a way to run compute shaders on your graphics card, and open background-removal models such as **BiRefNet** and **BEN2** caught up with — and in hair and fine-detail cases surpassed — the older proprietary models.
+
+Put together, a modern laptop can run a state-of-the-art matting model on a 1024-pixel image in about a second, entirely inside the browser tab. No upload, no server, no per-image cost.
+
+That is exactly what [CleanBG](/) does:
+
+1. The first time you visit, your browser downloads the model weights (about 100–220 MB depending on your hardware) and caches them. This happens once per device.
+2. Every image you drop in is processed in a Web Worker on your machine. There is no upload endpoint on the site — you can confirm this in your browser's Network tab, or just disconnect from the internet after the model has loaded.
+3. You get a transparent PNG (or WebP) at the original resolution, with optional solid or custom backgrounds.
+
+## How the results compare
+
+For people, pets and products the output is on par with remove.bg for most photos, including hair. Very fine or translucent details (thin wires, smoke, glass) can still differ from image to image. CleanBG's **Quality** mode runs a second pass zoomed in on the subject, which noticeably sharpens edges on small subjects.
+
+Speed depends on your device. On desktop Chrome or Edge with a recent GPU, expect roughly one to two seconds per image. Safari, Firefox and phones fall back to a lighter model on the CPU, which is slower but still fully local.
+
+## Migration checklist
+
+- Use up any remaining remove.bg credits before **December 1, 2026**.
+- If you relied on the remove.bg API, plan for Leonardo.Ai's different authentication and response format, or move batch work to a local tool.
+- Bookmark a browser-based remover so you are not blocked when the site goes dark. CleanBG works offline once cached.
+
+## Why CleanBG can stay free
+
+Because your device does the computation, the site has no per-image server cost. It is a static site plus a model download, which is cheap to host. CleanBG is built exclusively on MIT-licensed models (credits on the [privacy page](/privacy-policy#models)), so it can remain free and unlimited without a commercial model license.

@@ -1,53 +1,51 @@
 export const meta = {
   title: 'Privacy Policy',
-  description: 'How we collect, use, and protect your personal information.',
-  updated_at: '2026-05-21',
+  description: 'CleanBG processes your images entirely in your browser. Nothing you upload is ever sent to a server.',
+  updated_at: '2026-09-18',
 };
 
-## Introduction
+## The short version
 
-We respect your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, and safeguard your information when you use our service.
+CleanBG has no upload endpoint. When you remove a background, the AI model runs inside your browser on your own device. Your image, the mask and the result never leave your computer or phone. We cannot see, store or recover your images because they are never transmitted to us.
 
-## Information We Collect
+## What happens when you use the tool
 
-We collect the following types of information to provide and improve our service:
+1. **Model download.** The first time you use CleanBG on a device, your browser downloads the neural network weights (about 100–220 MB) from our content delivery network. This is an ordinary static file download; the request contains no information about your images.
+2. **Local processing.** Your image is decoded in a Web Worker in your browser, the model computes an alpha mask, and the transparent PNG is composed on a canvas — all in memory on your device.
+3. **Caching.** The browser stores the model in its Cache Storage so later visits work offline. You can clear it at any time from your browser settings.
 
-1. **Account Information** — Your name, email address, and other details you provide when creating an account.
-2. **Usage Data** — Information about how you interact with the service, including features accessed, frequency of use, and interaction patterns.
-3. **Device Information** — Device type, operating system, and browser type, used to optimize compatibility and performance.
-4. **Cookies** — Small data files stored on your device to remember preferences and improve your experience.
-5. **Payment Information** — Billing details handled by trusted third-party payment processors. We do not store full card numbers on our servers.
+You can verify this yourself: open your browser's developer tools, watch the Network tab while processing an image, or disconnect from the internet after the model has loaded.
 
-## How We Use Your Information
+## Data we do collect
 
-We use the data we collect to:
+- **Server logs.** Like every website, our hosting provider (Cloudflare) records standard request logs — IP address, user agent, requested page and time — for security and abuse prevention. These logs never contain image data.
+- **Analytics.** If enabled, we use privacy-respecting, aggregate page analytics (page views, country, browser family). We do not track individual users across sites and we never log filenames, image dimensions or pixel data.
+- **Local storage.** CleanBG stores a small amount of data in your browser (`localStorage` and Cache Storage) to remember your language, theme and which model configuration works on your device. This stays on your device.
 
-- Provide, maintain, and improve the service.
-- Process transactions and send related confirmations.
-- Send technical notices, security alerts, and support messages.
-- Respond to your questions, feedback, and support requests.
-- Detect, prevent, and address fraud and abuse.
+## Data we do not collect
 
-## Data Sharing
+We do not require accounts, do not ask for your name or email, do not store your images or results, and do not sell or share personal data with third parties.
 
-We do not sell your personal information. We may share data only in these limited cases:
+## Cookies
 
-- With service providers who help us operate the service, under confidentiality agreements.
-- To comply with legal obligations or respond to lawful requests from public authorities.
-- To protect our rights, property, or safety, or that of our users.
+CleanBG uses a single functional cookie to remember your language preference. No advertising or tracking cookies are set by the tool. If ads are introduced in the future, this policy and the cookie notice will be updated first.
 
-## Data Security
+## Children
 
-We implement industry-standard security measures including encryption in transit, access controls, and regular reviews. No method of transmission over the Internet is 100% secure, but we work continuously to protect your information.
+CleanBG is a general-purpose utility and does not knowingly collect personal information from anyone, including children.
 
-## Your Rights
+## Changes
 
-You have the right to access, update, export, or delete your personal information. You can do this through your account settings or by contacting us at the email address below.
+We may update this policy as the product evolves. The "last updated" date at the top reflects the latest revision.
 
-## Changes to This Policy
+<h2 id="models">Model credits</h2>
 
-We may update this Privacy Policy from time to time. We will notify you of any material changes by updating the date at the top of this page and, where appropriate, sending a notice through the service.
+CleanBG is built on open models released under the MIT license. The weights are downloaded to your browser and remain under their original licenses.
 
-## Contact Us
+- **BEN2** (Background Erase Network 2) by PramaLLC — [github.com/PramaLLC/BEN2](https://github.com/PramaLLC/BEN2). We serve a converted copy of the [onnx-community/BEN2-ONNX](https://huggingface.co/onnx-community/BEN2-ONNX) export with fp32 compute for WebGPU compatibility.
+- **BiRefNet** by Zheng Peng et al. — [github.com/ZhengPeng7/BiRefNet](https://github.com/ZhengPeng7/BiRefNet), browser-ready 512px export [studioludens/birefnet-lite-512](https://huggingface.co/studioludens/birefnet-lite-512).
+- **Transformers.js** and **ONNX Runtime Web** run the models in the browser (Apache-2.0 / MIT).
 
-If you have questions about this Privacy Policy, please contact us at the email address provided on our website.
+## Contact
+
+Questions about privacy? Open an issue on the project repository or reach out via the links in the footer.
