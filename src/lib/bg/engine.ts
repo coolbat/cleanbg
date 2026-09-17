@@ -83,12 +83,31 @@ async function loadTransformers(): Promise<Transformers> {
       env.allowLocalModels = false;
       env.allowRemoteModels = true;
       if (config?.modelHost) {
-        env.remoteHost = config.modelHost.replace(/\/?$/, '/');
+        const host = config.modelHost.replace(/\/?$/, '/');
         // Mirror keeps the Hugging Face layout, so the default
         // `{model}/resolve/{revision}/` template still applies.
+        env.remoteHost = host;
+        // Transformers.js points the ONNX runtime's wasm/mjs pair at jsDelivr
+        // (picking the right asyncify/non-asyncify build for the browser).
+        // Keep its choice but serve the files from the mirror:
+        //   {host}ort/{version}/ort-wasm-simd-threaded[.asyncify].{mjs,wasm}
+        const wasm = env.backends.onnx.wasm;
+        const version = env.backends.onnx.versions?.web;
+        const paths = wasm?.wasmPaths;
+        if (wasm && version && paths && typeof paths === 'object' && paths.mjs && paths.wasm) {
+          const file = (url: string) => url.split('/').pop() ?? url;
+          wasm.wasmPaths = {
+            mjs: `${host}ort/${version}/${file(String(paths.mjs))}`,
+            wasm: `${host}ort/${version}/${file(String(paths.wasm))}`,
+          };
+        }
       }
       // Cache API exists in dedicated workers on secure origins.
       env.useBrowserCache = typeof caches !== 'undefined';
+      console.info('[cleanbg] transformers ready', {
+        remoteHost: env.remoteHost,
+        wasmPaths: env.backends.onnx.wasm?.wasmPaths,
+      });
       return mod;
     });
   }

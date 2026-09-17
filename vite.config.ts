@@ -18,6 +18,12 @@ loadEnvFiles();
 export default defineConfig({
   resolve: {
     tsconfigPaths: true,
+    // Pick onnxruntime-web's "extern wasm" build: the default bundle embeds
+    // `new URL('ort-wasm-…asyncify.wasm', import.meta.url)`, which makes Vite
+    // emit a 27 MB asset — over the 25 MiB Workers static-asset limit. The
+    // runtime loads the wasm from `env.backends.onnx.wasm.wasmPaths` instead
+    // (our R2 mirror, or jsDelivr when no mirror is configured).
+    conditions: ['onnxruntime-web-use-extern-wasm'],
   },
   server: {
     port: 3000,

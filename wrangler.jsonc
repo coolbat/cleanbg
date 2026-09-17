@@ -12,7 +12,7 @@
   },
   "vars": {
     // Server-side runtime fallbacks for the build-time VITE_* values.
-    "VITE_APP_URL": "https://cleanbg.workers.dev",
+    "VITE_APP_URL": "https://cleanbg.lonelytony-chan.workers.dev",
     "VITE_APP_NAME": "CleanBG"
   }
   // Optional: bind the model bucket if a Worker route ever needs to serve

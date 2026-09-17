@@ -49,5 +49,15 @@ if [ ! -s "$DEST" ]; then
   uv run --with onnx --with numpy --with onnxruntime python3 scripts/convert-ben2.py "$TMP/model_fp16.onnx" "$DEST"
 fi
 
+echo "▸ ONNX Runtime wasm (served from the mirror instead of jsDelivr)"
+ORT_DIR=$(ls -d node_modules/.pnpm/onnxruntime-web@*/node_modules/onnxruntime-web | head -1)
+ORT_VER=$(node -p "require('./$ORT_DIR/package.json').version")
+mkdir -p "$OUT/ort/$ORT_VER"
+for f in ort-wasm-simd-threaded.asyncify.mjs ort-wasm-simd-threaded.asyncify.wasm \
+         ort-wasm-simd-threaded.mjs ort-wasm-simd-threaded.wasm; do
+  cp -f "$ORT_DIR/dist/$f" "$OUT/ort/$ORT_VER/$f"
+done
+echo "  ort $ORT_VER"
+
 echo "▸ done"
 find "$OUT" -type f -exec ls -la {} \;
