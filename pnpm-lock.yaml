@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@huggingface/transformers@4.3.0': ada08e75d59656ea10c3a49094c2e3efcb9200fc182d143aafb556c8bcdf8a8e
+
 importers:
 
   .:
@@ -19,7 +22,7 @@ importers:
         version: 5.3.0
       '@huggingface/transformers':
         specifier: ^4.3.0
-        version: 4.3.0(@types/node@22.20.3)
+        version: 4.3.0(patch_hash=ada08e75d59656ea10c3a49094c2e3efcb9200fc182d143aafb556c8bcdf8a8e)(@types/node@22.20.3)
       '@mdx-js/react':
         specifier: ^3.1.1
         version: 3.1.1(@types/react@19.3.0)(react@19.3.0)
@@ -90,6 +93,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^6.0.2
         version: 6.1.1(vite@8.3.0(@types/node@22.20.3)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13))
+      '@webgpu/types':
+        specifier: ^0.1.72
+        version: 0.1.72
       nitro:
         specifier: 3.0.260603-beta
         version: 3.0.260603-beta(dotenv@17.4.2)(jiti@2.7.0)(rollup@4.63.3)(vite@8.3.0(@types/node@22.20.3)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13))(wrangler@4.132.0(@types/node@22.20.3))
@@ -1712,6 +1718,9 @@ packages:
         optional: true
       oxc-transform-react:
         optional: true
+
+  '@webgpu/types@0.1.72':
+    resolution: {integrity: sha512-0cF7RFM2edNoiIS1ODJp0/Gzv4/xSXhwoR0YCza+OWpJWtn4wmo9DvK91aLlH9+uUnwIriP7ZiC3WitmyhuzBw==}
 
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
@@ -4374,7 +4383,7 @@ snapshots:
 
   '@huggingface/tokenizers@0.2.0': {}
 
-  '@huggingface/transformers@4.3.0(@types/node@22.20.3)':
+  '@huggingface/transformers@4.3.0(patch_hash=ada08e75d59656ea10c3a49094c2e3efcb9200fc182d143aafb556c8bcdf8a8e)(@types/node@22.20.3)':
     dependencies:
       '@huggingface/jinja': 0.5.10
       '@huggingface/tokenizers': 0.2.0
@@ -5308,6 +5317,8 @@ snapshots:
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.3.0(@types/node@22.20.3)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)
+
+  '@webgpu/types@0.1.72': {}
 
   accepts@2.0.0:
     dependencies:

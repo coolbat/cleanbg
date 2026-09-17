@@ -6,8 +6,9 @@ import viteReact from '@vitejs/plugin-react';
 import { nitro } from 'nitro/vite';
 import { defineConfig } from 'vite';
 
-import { loadEnvFiles } from './src/lib/env';
-import { SECURITY_HEADERS } from './src/lib/security-headers';
+import { localModels } from './scripts/vite-plugin-local-models.ts';
+import { loadEnvFiles } from './src/lib/env.ts';
+import { SECURITY_HEADERS } from './src/lib/security-headers.ts';
 
 // Populate process.env from .env.local / .env.{NODE_ENV} / .env for the dev
 // server and build. Everything in this project is public (VITE_*), there
@@ -15,6 +16,9 @@ import { SECURITY_HEADERS } from './src/lib/security-headers';
 loadEnvFiles();
 
 export default defineConfig({
+  resolve: {
+    tsconfigPaths: true,
+  },
   server: {
     port: 3000,
     // Dev parity with production: cross-origin isolation is required for
@@ -33,6 +37,7 @@ export default defineConfig({
     format: 'es',
   },
   plugins: [
+    localModels(),
     // MDX must run before the react plugin so JSX in compiled MDX gets transformed.
     { enforce: 'pre', ...mdx({ providerImportSource: '@mdx-js/react' }) },
     tailwindcss(),

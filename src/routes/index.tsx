@@ -8,6 +8,7 @@ import { CTA } from '@/blocks/cta';
 import { Footer } from '@/blocks/footer';
 import { envConfigs } from '@/config';
 import { getBlogPostsFn } from '@/content/posts/server';
+import { Remover } from '@/features/remover/remover';
 import { m } from '@/paraglide/messages.js';
 import { getLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
 
@@ -21,10 +22,7 @@ function HomePage() {
         <Hero />
         <section id="tool" className="px-4 pb-24 scroll-mt-20">
           <div className="mx-auto max-w-4xl">
-            {/* Remover tool mounts here (client-only) */}
-            <div className="rounded-3xl border border-dashed p-12 text-center text-muted-foreground">
-              {m['tool.dropzone.title']()}
-            </div>
+            <Remover />
           </div>
         </section>
         <Features />

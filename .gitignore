@@ -33,3 +33,6 @@ yarn-error.log*
 
 # model files are never committed (mirrored to R2 by scripts/upload-models.ts)
 /models/
+
+# local caches
+/.cache/

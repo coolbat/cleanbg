@@ -88,6 +88,7 @@
   "tool.progress.finishing": "Finishing edges…",
   "tool.progress.switching": "Switching to a compatible model…",
   "tool.progress.done": "Background removed",
+  "tool.progress.cancel": "Cancel",
 
   "tool.result.original": "Original",
   "tool.result.result": "Result",

@@ -9,3 +9,5 @@ allowBuilds:
   onnxruntime-node: false
   protobufjs: true
   workerd: true
+patchedDependencies:
+  '@huggingface/transformers@4.3.0': patches/@huggingface__transformers@4.3.0.patch

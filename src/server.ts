@@ -1,6 +1,6 @@
 import handler from '@tanstack/react-start/server-entry';
 
-import { SECURITY_HEADERS } from '@/lib/security-headers';
+import { SECURITY_HEADERS } from './lib/security-headers';
 
 import { paraglideMiddleware } from './paraglide/server.js';
 

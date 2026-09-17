@@ -88,6 +88,7 @@
   "tool.progress.finishing": "处理边缘…",
   "tool.progress.switching": "切换到兼容模型…",
   "tool.progress.done": "背景已去除",
+  "tool.progress.cancel": "取消",
 
   "tool.result.original": "原图",
   "tool.result.result": "结果",
