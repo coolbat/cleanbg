@@ -1,0 +1,21 @@
+// Cloudflare Workers deploy config.
+// `pnpm cf:build` (NITRO_PRESET=cloudflare_module) merges this file into the
+// generated .output/server/wrangler.json; deploy with `pnpm cf:deploy`.
+// Nothing in here is secret: the site has no backend state.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cleanbg",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    // Server-side runtime fallbacks for the build-time VITE_* values.
+    "VITE_APP_URL": "https://cleanbg.workers.dev",
+    "VITE_APP_NAME": "CleanBG"
+  }
+  // Optional: bind the model bucket if a Worker route ever needs to serve
+  // models directly instead of via an R2 custom domain.
+  // "r2_buckets": [{ "binding": "MODELS", "bucket_name": "cleanbg-models" }]
+}

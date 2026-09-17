@@ -1,0 +1,35 @@
+# dependencies
+/node_modules
+
+# tanstack start / vite / nitro
+/.output/
+/.nitro/
+/.tanstack/
+/dist/
+src/routeTree.gen.ts
+src/paraglide/
+
+# cloudflare
+/.wrangler/
+
+# editors
+.idea
+.vscode
+.DS_Store
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env — local files, never commit (keep .env.example tracked)
+.env
+.env.*
+!.env.example
+
+# typescript
+*.tsbuildinfo
+
+# model files are never committed (mirrored to R2 by scripts/upload-models.ts)
+/models/

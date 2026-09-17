@@ -1,0 +1,11 @@
+# Cloudflare static asset headers. HTML responses get the same set from
+# src/server.ts; this covers assets served directly by the Workers asset
+# binding (and lets the page stay cross-origin isolated when cached).
+/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: credentialless
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

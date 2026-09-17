@@ -1,0 +1,12 @@
+{
+  "name": "CleanBG — Background Remover",
+  "short_name": "CleanBG",
+  "description": "Free background remover that runs entirely in your browser. No uploads, no limits.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    { "src": "/logo.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
