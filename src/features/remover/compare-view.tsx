@@ -6,9 +6,13 @@ export type PreviewBackground =
   | { type: 'transparent' }
   | { type: 'color'; color: string };
 
+// Opaque checkerboard: a solid base colour under the grey squares. The
+// result layer sits on top of the original in the compare view, so any
+// transparency here would let the original bleed through the gaps.
 const CHECKERBOARD: React.CSSProperties = {
+  backgroundColor: '#f4f4f5',
   backgroundImage:
-    'linear-gradient(45deg, rgba(128,128,128,.25) 25%, transparent 25%), linear-gradient(-45deg, rgba(128,128,128,.25) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(128,128,128,.25) 75%), linear-gradient(-45deg, transparent 75%, rgba(128,128,128,.25) 75%)',
+    'linear-gradient(45deg, #d4d4d8 25%, transparent 25%), linear-gradient(-45deg, #d4d4d8 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #d4d4d8 75%), linear-gradient(-45deg, transparent 75%, #d4d4d8 75%)',
   backgroundSize: '20px 20px',
   backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0',
 };
