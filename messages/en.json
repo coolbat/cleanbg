@@ -107,7 +107,7 @@
   "tool.quality.label": "Mode",
   "tool.quality.fast": "Fast",
   "tool.quality.quality": "Quality",
-  "tool.quality.hint": "Quality runs a second pass on the subject for sharper edges.",
+  "tool.quality.hint": "Quality re-runs the model on zoomed-in edge tiles for finer hair. Takes a few extra seconds.",
 
   "tool.engine.webgpu": "GPU",
   "tool.engine.wasm": "CPU",

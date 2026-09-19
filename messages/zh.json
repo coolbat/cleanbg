@@ -107,7 +107,7 @@
   "tool.quality.label": "模式",
   "tool.quality.fast": "快速",
   "tool.quality.quality": "高质量",
-  "tool.quality.hint": "高质量模式会对主体做第二次精修，边缘更锐利。",
+  "tool.quality.hint": "高质量模式会在放大的边缘区块上重复运行模型，发丝更精细，多花几秒钟。",
 
   "tool.engine.webgpu": "GPU",
   "tool.engine.wasm": "CPU",

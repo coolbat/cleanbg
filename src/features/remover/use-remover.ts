@@ -45,6 +45,7 @@ export function useRemover() {
   const [state, setState] = useState<RemoverState>({ status: 'idle' });
   const [quality, setQuality] = useState<RemovalQuality>('fast');
   const [plan, setPlan] = useState<EngineChoice[] | null>(null);
+  const qualityTouched = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
   const urlsRef = useRef<Set<string>>(new Set());
   const bitmapRef = useRef<ImageBitmap | null>(null);
@@ -68,7 +69,14 @@ export function useRemover() {
       .then(async (client) => {
         const remover = client.getRemover();
         const nextPlan = await remover.init();
-        if (!disposed) setPlan(nextPlan);
+        if (!disposed) {
+          setPlan(nextPlan);
+          // Quality mode costs a few extra model passes; default to it
+          // where a GPU makes that cheap, unless the user already chose.
+          if (nextPlan[0]?.provider === 'webgpu') {
+            setQuality((q) => (qualityTouched.current ? q : 'quality'));
+          }
+        }
         // Best-effort prefetch; ignore failures here, the real run reports them.
         remover.prepare().catch(() => undefined);
       })
@@ -152,6 +160,7 @@ export function useRemover() {
 
   const changeQuality = useCallback(
     (next: RemovalQuality) => {
+      qualityTouched.current = true;
       setQuality(next);
       // Re-run on the current image so the toggle has an immediate effect.
       if (state.status === 'done' || state.status === 'error') {

@@ -116,7 +116,13 @@ export type MainToWorkerMessage =
 export type WorkerToMainMessage =
   | { type: 'ready'; plan: EngineChoice[] }
   | { type: 'progress'; id: number; progress: RemovalProgress }
-  | { type: 'engine-failed'; key: string; reason: string }
+  | {
+      type: 'engine-failed';
+      key: string;
+      reason: string;
+      /** Runtime/GPU failure worth remembering (vs. a transient download error). */
+      persistent: boolean;
+    }
   | { type: 'prepared'; id: number; engine: EngineChoice }
   | {
       type: 'result';

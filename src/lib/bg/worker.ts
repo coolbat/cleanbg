@@ -16,9 +16,15 @@ import {
 } from './engine';
 import { BackgroundRemovalError, isCancelled } from './errors';
 import {
+  accumulateTile,
+  applyTileMerge,
   bitmapToSquareRgba,
+  buildFullAlpha,
   compositeCutout,
+  createTileMerge,
+  edgeBand,
   findRefinementCrop,
+  planEdgeTiles,
   type InferenceMask,
   type MaskRefinement,
 } from './image';
@@ -49,11 +55,23 @@ function describe(error: unknown): string {
   return String(error);
 }
 
-function reportEngineFailure(choice: EngineChoice, error: unknown) {
+/**
+ * A download hiccup (server restart, flaky network, aborted fetch) says
+ * nothing about the device; only runtime failures should be remembered
+ * across sessions.
+ */
+function isTransientFailure(reason: string): boolean {
+  return /fetch|network|NetworkError|Load failed|HTTP|status code|status:|timed? ?out|aborted|ECONN|unexpected end|Unexpected token/i.test(
+    reason,
+  );
+}
+
+function reportEngineFailure(choice: EngineChoice, error: unknown, phase: 'load' | 'run') {
   const reason = describe(error);
-  console.warn(`[cleanbg] engine ${engineKey(choice)} failed: ${reason}`, error);
+  const persistent = phase === 'run' || !isTransientFailure(reason);
+  console.warn(`[cleanbg] engine ${engineKey(choice)} failed during ${phase}: ${reason}`, error);
   markEngineFailed(choice);
-  post({ type: 'engine-failed', key: engineKey(choice), reason });
+  post({ type: 'engine-failed', key: engineKey(choice), reason, persistent });
 }
 
 function throwIfCancelled(id: number) {
@@ -109,7 +127,7 @@ async function acquireEngine(
       // (e.g. network blip); everything else is skipped for this session.
       const isLastResort = choice.model === 'birefnet-lite' && choice.provider === 'wasm';
       if (isLastResort) break;
-      reportEngineFailure(choice, error);
+      reportEngineFailure(choice, error, 'load');
       report('switching', to, undefined);
     }
   }
@@ -165,33 +183,68 @@ async function handleRemove(id: number, bitmap: ImageBitmap, quality: RemovalQua
             { cause: error },
           );
         }
-        reportEngineFailure(engine.choice, error);
+        reportEngineFailure(engine.choice, error, 'run');
         report('switching', 0.7);
         engine = await acquireEngine(id, report, [0.7, 0.8]);
       }
     }
 
-    // Optional second pass on the subject for sharper edges.
+    const { width, height } = bitmap;
+    let refined = false;
+
+    // Quality pass 1: zoom onto the subject when it is small in the frame.
     let refinement: MaskRefinement | undefined;
     if (quality === 'quality') {
-      const crop = findRefinementCrop(base, bitmap.width, bitmap.height);
+      const crop = findRefinementCrop(base, width, height);
       if (crop) {
-        report('refining', 0.84, engine.choice);
+        report('refining', 0.78, engine.choice);
         try {
-          const refined = await runInference(id, engine, bitmap, crop);
-          if (refined.inspection.valid && refined.inspection.hasForegroundSignal) {
-            refinement = { mask: refined, crop };
+          const pass = await runInference(id, engine, bitmap, crop);
+          if (pass.inspection.valid && pass.inspection.hasForegroundSignal) {
+            refinement = { mask: pass, crop };
+            refined = true;
           }
         } catch (error) {
           if (isCancelled(error)) throw error;
-          // Refinement is best-effort; keep the base mask.
+          // Best-effort; keep the base mask.
         }
       }
     }
 
     throwIfCancelled(id);
+    const alpha = buildFullAlpha(width, height, base, refinement);
+
+    // Quality pass 2: re-run the model on 2x-zoomed tiles along the
+    // foreground/background boundary so thin hair the low-res pass smeared
+    // or dropped is recovered at (closer to) native resolution.
+    if (quality === 'quality') {
+      const inputSize = MODELS[engine.choice.model].inputSize;
+      const band = edgeBand(alpha, width, height, Math.round(Math.min(width, height) * 0.02));
+      // Each tile is a full model pass (~1s on a GPU, several on the CPU);
+      // cap the count so Quality mode stays interactive.
+      const maxTiles = engine.choice.provider === 'webgpu' ? 4 : 2;
+      const tiles = planEdgeTiles(band, width, height, inputSize, maxTiles);
+      if (tiles.length) {
+        const merge = createTileMerge(alpha.length);
+        for (let i = 0; i < tiles.length; i++) {
+          throwIfCancelled(id);
+          report('refining', 0.8 + (0.1 * (i + 1)) / tiles.length, engine.choice);
+          try {
+            const pass = await runInference(id, engine, bitmap, tiles[i]);
+            if (pass.inspection.valid) accumulateTile(merge, band, width, height, tiles[i], pass);
+          } catch (error) {
+            if (isCancelled(error)) throw error;
+            // Skip this tile; the rest still improve the edge.
+          }
+        }
+        applyTileMerge(alpha, merge);
+        refined = true;
+      }
+    }
+
+    throwIfCancelled(id);
     report('finishing', 0.92, engine.choice);
-    const result = compositeCutout(bitmap, base, refinement);
+    const result = compositeCutout(bitmap, alpha);
     report('done', 1, engine.choice);
     post(
       {
@@ -203,7 +256,7 @@ async function handleRemove(id: number, bitmap: ImageBitmap, quality: RemovalQua
           height: bitmap.height,
           engine: engine.choice,
           quality,
-          refined: Boolean(refinement),
+          refined,
           durationMs: Math.round(performance.now() - startedAt),
         },
       },

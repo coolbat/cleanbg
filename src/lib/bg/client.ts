@@ -49,16 +49,31 @@ export const SUPPORTED_IMAGE_MIME_TYPES = [
 export const IMAGE_ACCEPT_ATTRIBUTE = SUPPORTED_IMAGE_MIME_TYPES.join(',');
 
 // Failure memory is keyed by model revisions so a model/runtime upgrade
-// automatically re-tries GPUs that were rejected by the old build.
-const FAILURE_KEY = `cleanbg:engine-failures:v1:${BEN2.revision.slice(0, 8)}:${BIREFNET_LITE.revision.slice(0, 8)}`;
+// automatically re-tries GPUs that were rejected by the old build. Entries
+// expire so a one-off bad day (driver update, memory pressure) does not
+// downgrade a device forever.
+const FAILURE_KEY = `cleanbg:engine-failures:v2:${BEN2.revision.slice(0, 8)}:${BIREFNET_LITE.revision.slice(0, 8)}`;
+const FAILURE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
-function readFailures(): string[] {
+type FailureRecord = Record<string, number>; // key -> timestamp
+
+function readFailureRecords(): FailureRecord {
   try {
     const raw = localStorage.getItem(FAILURE_KEY);
-    return raw ? (JSON.parse(raw) as string[]) : [];
+    const parsed = raw ? (JSON.parse(raw) as FailureRecord) : {};
+    const now = Date.now();
+    const fresh: FailureRecord = {};
+    for (const [key, at] of Object.entries(parsed)) {
+      if (typeof at === 'number' && now - at < FAILURE_TTL_MS) fresh[key] = at;
+    }
+    return fresh;
   } catch {
-    return [];
+    return {};
   }
+}
+
+function readFailures(): string[] {
+  return Object.keys(readFailureRecords());
 }
 
 function rememberFailure(key: string) {
@@ -66,9 +81,9 @@ function rememberFailure(key: string) {
   // are usually memory pressure that varies run to run.
   if (!key.endsWith(':webgpu')) return;
   try {
-    const set = new Set(readFailures());
-    set.add(key);
-    localStorage.setItem(FAILURE_KEY, JSON.stringify([...set]));
+    const records = readFailureRecords();
+    records[key] = Date.now();
+    localStorage.setItem(FAILURE_KEY, JSON.stringify(records));
   } catch {
     // Storage may be unavailable (private mode); in-session memory still works.
   }
@@ -258,7 +273,7 @@ class BackgroundRemover {
         break;
       case 'engine-failed':
         debugLog.push(`${msg.key}: ${msg.reason}`);
-        rememberFailure(msg.key);
+        if (msg.persistent) rememberFailure(msg.key);
         break;
       case 'prepared':
         this.pending.get(msg.id)?.resolve(msg.engine);
