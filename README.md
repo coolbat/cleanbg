@@ -36,14 +36,18 @@ Model revisions are immutable: bump the revision (`src/lib/bg/models.ts`) when p
 
 ## Deploy
 
+Pushes to `main` build the Worker and deploy it with Wrangler in GitHub Actions. The workflow uses the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repository secrets. Pull requests run the same checks and do not deploy.
+
+`wrangler.jsonc` holds the Worker name, custom domains, the R2 model bucket, and public vars. There are no server-side secrets.
+
+A local deploy still works when Wrangler is logged in on this machine:
+
 ```bash
 # .env.production: VITE_APP_URL, VITE_APP_NAME, VITE_MODEL_HOST
 pnpm cf:build      # NITRO_PRESET=cloudflare_module vite build
 pnpm cf:preview    # wrangler dev on the built output
 pnpm cf:deploy     # build + wrangler deploy
 ```
-
-`wrangler.jsonc` holds the Worker name and public vars; there are no secrets.
 
 ## Layout
 

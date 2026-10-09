@@ -1,0 +1,29 @@
+export const meta = {
+  title: 'Batch-remove image backgrounds in the browser and download a ZIP',
+  description:
+    'Queue many photos, process them one by one on your device, then export a ZIP of transparent PNGs — no credits, no upload, no desktop app install.',
+  created_at: '2026-09-20',
+  author_name: 'CleanBG',
+};
+
+## Why batch used to mean “pay up”
+
+Cloud removers meter GPU time, so batches are where the invoice appears. A local queue has a different limit: your battery and your patience. Ten portraits on a laptop GPU is a short wait. A hundred 24-megapixel files on a phone is a long one. Choose the device to match the pile.
+
+## How CleanBG queues work
+
+Drop several JPEGs, PNGs, WebPs or HEICs on the tool. They appear as a strip of thumbnails and run one after another, sharing the model that is already in memory. You can add more files while a run is in progress. When a result is ready you can still edit the mask, change the background, crop, or pick PNG / WebP / JPG.
+
+**Download ZIP** packs every finished cutout using the export settings you currently have selected — so set white background and JPG *before* you zip if that is what the marketplace wants.
+
+## Tips that save time
+
+- Use Fast mode to drain the queue, then re-run Quality on the one or two shots where hair is messy.
+- Keep longest sides under ~4000 px unless you need print. The model reasons at 512–1024 px anyway; giant inputs mostly cost memory.
+- Do not close the tab until the ZIP has started downloading. Everything lives in RAM for this session.
+
+## Privacy still holds
+
+A batch is still local. There is no bulk-upload API hiding behind the queue. The ZIP is built with JSZip in the page, then saved by your browser.
+
+Open the [tool](/#tool) and drop a folder’s worth of files to try it.

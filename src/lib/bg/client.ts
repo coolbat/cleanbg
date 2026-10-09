@@ -5,7 +5,9 @@
  *
  * Browser-only: import lazily from components (never during SSR).
  */
+import { reportEngineEvent } from '../telemetry';
 import { BackgroundRemovalError } from './errors';
+import { HEIC_MIME_TYPES, NATIVE_IMAGE_MIME_TYPES, isHeicFile } from './formats';
 import { BEN2, BIREFNET_LITE, MODELS } from './models';
 import type {
   EngineChoice,
@@ -20,6 +22,7 @@ import type {
 
 export type { EngineChoice, RemovalProgress, RemovalQuality } from './types';
 export { BackgroundRemovalError, isCancelled } from './errors';
+export { IMAGE_ACCEPT_ATTRIBUTE } from './formats';
 export { MODELS, formatBytes } from './models';
 
 export interface RemoveOptions {
@@ -39,14 +42,9 @@ export const MAX_DIMENSION = 6144;
 export const MAX_MEGAPIXELS = 32;
 
 export const SUPPORTED_IMAGE_MIME_TYPES = [
-  'image/jpeg',
-  'image/png',
-  'image/webp',
-  'image/gif',
-  'image/bmp',
-  'image/avif',
+  ...NATIVE_IMAGE_MIME_TYPES,
+  ...HEIC_MIME_TYPES,
 ];
-export const IMAGE_ACCEPT_ATTRIBUTE = SUPPORTED_IMAGE_MIME_TYPES.join(',');
 
 // Failure memory is keyed by model revisions so a model/runtime upgrade
 // automatically re-tries GPUs that were rejected by the old build. Entries
@@ -133,18 +131,7 @@ export async function gatherHardwareHints(): Promise<HardwareHints> {
  * Decode any supported image into an ImageBitmap, downscaling anything that
  * would blow the canvas/memory budget. Throws typed errors for the UI.
  */
-export async function decodeImage(file: Blob): Promise<ImageBitmap> {
-  if (file.type && !SUPPORTED_IMAGE_MIME_TYPES.includes(file.type)) {
-    throw new BackgroundRemovalError('unsupported-image', `Unsupported image type: ${file.type}`);
-  }
-  let bitmap: ImageBitmap;
-  try {
-    bitmap = await createImageBitmap(file);
-  } catch (error) {
-    throw new BackgroundRemovalError('unsupported-image', 'The image could not be decoded.', {
-      cause: error,
-    });
-  }
+async function downscaleIfNeeded(bitmap: ImageBitmap): Promise<ImageBitmap> {
   const { width, height } = bitmap;
   const longest = Math.max(width, height);
   const megapixels = (width * height) / 1e6;
@@ -164,6 +151,39 @@ export async function decodeImage(file: Blob): Promise<ImageBitmap> {
     });
   } finally {
     bitmap.close();
+  }
+}
+
+async function decodeNative(file: Blob): Promise<ImageBitmap> {
+  return downscaleIfNeeded(await createImageBitmap(file));
+}
+
+/**
+ * Decode any supported image into an ImageBitmap, downscaling anything that
+ * would blow the canvas/memory budget. Throws typed errors for the UI.
+ */
+export async function decodeImage(file: Blob): Promise<ImageBitmap> {
+  const heic = isHeicFile(file);
+  if (file.type && !SUPPORTED_IMAGE_MIME_TYPES.includes(file.type as (typeof SUPPORTED_IMAGE_MIME_TYPES)[number]) && !heic) {
+    throw new BackgroundRemovalError('unsupported-image', `Unsupported image type: ${file.type}`);
+  }
+
+  try {
+    return await decodeNative(file);
+  } catch (nativeError) {
+    if (!heic && file.type && !file.type.includes('heic') && !file.type.includes('heif')) {
+      throw new BackgroundRemovalError('unsupported-image', 'The image could not be decoded.', {
+        cause: nativeError,
+      });
+    }
+    try {
+      const { decodeHeic } = await import('./heic');
+      return await downscaleIfNeeded(await decodeHeic(file));
+    } catch (error) {
+      throw new BackgroundRemovalError('unsupported-image', 'The image could not be decoded.', {
+        cause: error,
+      });
+    }
   }
 }
 
@@ -274,6 +294,11 @@ class BackgroundRemover {
       case 'engine-failed':
         debugLog.push(`${msg.key}: ${msg.reason}`);
         if (msg.persistent) rememberFailure(msg.key);
+        reportEngineEvent('engine-failed', {
+          key: msg.key,
+          reason: msg.reason,
+          persistent: msg.persistent,
+        });
         break;
       case 'prepared':
         this.pending.get(msg.id)?.resolve(msg.engine);
@@ -284,6 +309,7 @@ class BackgroundRemover {
         this.pending.delete(msg.id);
         break;
       case 'error':
+        reportEngineEvent('error', { code: msg.code });
         this.pending.get(msg.id)?.reject(new BackgroundRemovalError(msg.code, msg.message));
         this.pending.delete(msg.id);
         break;
@@ -291,6 +317,7 @@ class BackgroundRemover {
   }
 
   private crash(message: string) {
+    reportEngineEvent('worker-crashed', { code: 'worker-crashed' });
     const error = new BackgroundRemovalError('worker-crashed', message);
     for (const [id, p] of this.pending) {
       if (id !== 0) p.reject(error);

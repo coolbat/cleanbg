@@ -1,0 +1,31 @@
+export const meta = {
+  title: 'How in-browser background removal works — and why your photo never leaves the tab',
+  description:
+    'WebGPU, ONNX and a cached model file: a plain-language look at how CleanBG removes backgrounds entirely on your device, and what that means for privacy and quality.',
+  created_at: '2026-09-20',
+  author_name: 'CleanBG',
+};
+
+## The short version
+
+A background remover has two jobs: decide which pixels are the subject, then punch a hole through everything else. Cloud tools do that on a server after you upload the file. CleanBG does the same math inside the browser tab that is already open.
+
+## What actually gets downloaded
+
+The first visit fetches a neural-network weights file (roughly 100 MB on phones, up to about 220 MB on a desktop GPU). That file is the model. Your browser stores it in Cache Storage, so later visits skip the download. After that, CleanBG is a static website plus some JavaScript — there is no API that accepts images.
+
+You can prove this: open DevTools → Network, drop a photo, and watch. You will see model files (once) and nothing that looks like an image upload.
+
+## Why a GPU helps, and what happens without one
+
+On Chrome or Edge with WebGPU, the heavy matrix multiplies run on the graphics card. A typical laptop finishes a portrait in around a second. Safari, Firefox and most phones fall back to a smaller model on the CPU. It is slower, still local, and still free.
+
+Quality mode spends a few extra seconds re-running the model on zoomed-in tiles around hair and edges. Fast mode is the single full-frame pass.
+
+## What the model cannot see
+
+Because the pixels never leave your machine, neither do ID photos, unreleased product shots, or client work. The trade-off is hardware: a very old phone may struggle with a 20-megapixel HEIC. In that case shrink the image first — the subject still comes out at a usable size.
+
+## Try it
+
+[Remove a background](/#tool) without creating an account. The model download is one-time per device; after that you can even go offline.

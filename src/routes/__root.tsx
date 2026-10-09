@@ -10,9 +10,10 @@ import type { ReactNode } from 'react';
 
 import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 import { Plausible } from '@/components/analytics/plausible';
+import { PwaRegister } from '@/components/pwa-register';
 import { Toaster } from '@/components/ui/sonner';
 import { envConfigs } from '@/config';
-import { getLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
+import { getLocale } from '@/paraglide/runtime.js';
 
 import '@fontsource-variable/inter';
 import '@fontsource/libre-baskerville/400.css';
@@ -30,15 +31,18 @@ export const Route = createRootRoute({
         { title: envConfigs.app_name },
         { name: 'description', content: envConfigs.app_description },
         { name: 'theme-color', content: '#0a0a0a' },
+        { name: 'mobile-web-app-capable', content: 'yes' },
+        { name: 'apple-mobile-web-app-capable', content: 'yes' },
+        { name: 'apple-mobile-web-app-title', content: envConfigs.app_name },
+        { property: 'og:image', content: `${appUrl}/og.png` },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:image', content: `${appUrl}/og.png` },
       ],
       links: [
         { rel: 'icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32.png' },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
         { rel: 'manifest', href: '/site.webmanifest' },
-        ...locales.map((loc) => ({
-          rel: 'alternate',
-          hrefLang: loc,
-          href: localizeUrl(`${appUrl}/`, { locale: loc }).href,
-        })),
       ],
     };
   },
@@ -57,6 +61,7 @@ function RootComponent() {
     >
       <Outlet />
       <Toaster position="top-center" richColors />
+      <PwaRegister />
       {envConfigs.ga_id ? (
         <GoogleAnalytics measurementId={envConfigs.ga_id} />
       ) : null}

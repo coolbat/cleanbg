@@ -1,0 +1,16 @@
+# CleanBG
+
+> Free in-browser background remover. Photos are never uploaded.
+
+- Home: https://cleanbg.app/
+- White background: https://cleanbg.app/white-background
+- Transparent PNG: https://cleanbg.app/transparent-png
+- Logo: https://cleanbg.app/logo
+- Portrait background (not an official ID photo): https://cleanbg.app/passport-photo
+- iPhone HEIC: https://cleanbg.app/iphone-heic
+- Blog: https://cleanbg.app/blog
+- Privacy: https://cleanbg.app/privacy-policy
+- Terms: https://cleanbg.app/terms-of-service
+- Licenses: https://cleanbg.app/licenses
+
+Processing uses MIT-licensed ONNX models (BEN2, BiRefNet lite) via Transformers.js and ONNX Runtime Web, running in a Web Worker on the visitor's device. There is no image-upload API. Chinese pages live under /zh/.

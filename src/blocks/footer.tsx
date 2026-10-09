@@ -1,6 +1,8 @@
 import type { SVGProps } from "react";
 import { m } from "@/paraglide/messages.js";
+import { getLocale } from "@/paraglide/runtime.js";
 import { envConfigs } from "@/config";
+import { intentLinks } from "@/content/intents";
 import {
   SiteFooter,
   type FooterColumn,
@@ -33,6 +35,13 @@ export function Footer() {
       ],
     },
     {
+      title: m["landing.footer.uses"](),
+      links: intentLinks(getLocale()).map((link) => ({
+        label: link.label,
+        href: link.href,
+      })),
+    },
+    {
       title: m["landing.footer.resources"](),
       links: [
         { label: m["landing.footer.models"](), href: "/privacy-policy#models" },
@@ -42,10 +51,20 @@ export function Footer() {
       ],
     },
     {
+      title: m["landing.footer.contact"](),
+      links: [
+        {
+          label: m["landing.footer.email"](),
+          href: "mailto:hello@cleanbg.app",
+        },
+      ],
+    },
+    {
       title: m["landing.footer.legal"](),
       links: [
         { label: m["landing.footer.privacy"](), href: "/privacy-policy" },
         { label: m["landing.footer.terms"](), href: "/terms-of-service" },
+        { label: m["landing.footer.licenses"](), href: "/licenses" },
       ],
     },
   ];

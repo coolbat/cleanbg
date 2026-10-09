@@ -4,7 +4,18 @@ import { envConfigs } from '@/config';
 import { getLocalPosts } from '@/content/posts';
 import { baseLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
 
-const STATIC_PATHS = ['', '/blog', '/privacy-policy', '/terms-of-service'];
+const STATIC_PATHS = [
+  '',
+  '/blog',
+  '/privacy-policy',
+  '/terms-of-service',
+  '/licenses',
+  '/white-background',
+  '/transparent-png',
+  '/logo',
+  '/passport-photo',
+  '/iphone-heic',
+];
 
 type Entry = {
   path: string;
@@ -20,12 +31,13 @@ function urlFor(path: string, locale: string): string {
 }
 
 function entryXml(e: Entry): string {
-  const alternates = locales
-    .map(
+  const alternates = [
+    ...locales.map(
       (loc) =>
-        `    <xhtml:link rel="alternate" hreflang="${loc}" href="${urlFor(e.path, loc)}"/>`
-    )
-    .join('\n');
+        `    <xhtml:link rel="alternate" hreflang="${loc}" href="${urlFor(e.path, loc)}"/>`,
+    ),
+    `    <xhtml:link rel="alternate" hreflang="x-default" href="${urlFor(e.path, baseLocale)}"/>`,
+  ].join('\n');
   return [
     '  <url>',
     `    <loc>${urlFor(e.path, baseLocale)}</loc>`,

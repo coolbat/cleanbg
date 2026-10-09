@@ -6,8 +6,9 @@ import { BlogCard } from '@/components/blog-card';
 import { envConfigs } from '@/config';
 import { formatPostDate } from '@/content/posts';
 import { getBlogPostsFn } from '@/content/posts/server';
+import { localeAlternateLinks, shareMeta } from '@/lib/seo';
 import { m } from '@/paraglide/messages.js';
-import { getLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
+import { getLocale, localizeUrl } from '@/paraglide/runtime.js';
 
 export const Route = createFileRoute('/blog/')({
   loader: async () => {
@@ -20,20 +21,14 @@ export const Route = createFileRoute('/blog/')({
     const urlFor = (loc: string) =>
       localizeUrl(`${envConfigs.app_url}/blog`, { locale: loc as any }).href;
     return {
-      meta: [
-        { title: `${m['blog.title']({}, { locale: locale as any })} | ${envConfigs.app_name}` },
-        {
-          name: 'description',
-          content: m['blog.description']({}, { locale: locale as any }),
-        },
-      ],
+      meta: shareMeta(
+        `${m['blog.title']({}, { locale: locale as any })} | ${envConfigs.app_name}`,
+        m['blog.description']({}, { locale: locale as any }),
+        urlFor(locale ?? 'en'),
+      ),
       links: [
         { rel: 'canonical', href: urlFor(locale ?? 'en') },
-        ...locales.map((loc) => ({
-          rel: 'alternate',
-          hrefLang: loc,
-          href: urlFor(loc),
-        })),
+        ...localeAlternateLinks('/blog'),
       ],
     };
   },

@@ -9,6 +9,7 @@ import { envConfigs } from '@/config';
 import { formatPostDate, loadLocalPost } from '@/content/posts';
 import { getBlogPostFn } from '@/content/posts/server';
 import { Link } from '@/core/i18n/navigation';
+import { localeAlternateLinks, shareMeta } from '@/lib/seo';
 import { m } from '@/paraglide/messages.js';
 import { getLocale, localizeUrl } from '@/paraglide/runtime.js';
 
@@ -28,11 +29,15 @@ export const Route = createFileRoute('/blog/$slug')({
       locale: locale as any,
     }).href;
     return {
-      meta: [
-        { title: `${post.title} | ${envConfigs.app_name}` },
-        { name: 'description', content: post.description },
+      meta: shareMeta(
+        `${post.title} | ${envConfigs.app_name}`,
+        post.description,
+        canonical,
+      ),
+      links: [
+        { rel: 'canonical', href: canonical },
+        ...localeAlternateLinks(`/blog/${post.slug}`),
       ],
-      links: [{ rel: 'canonical', href: canonical }],
     };
   },
   component: BlogPostPage,

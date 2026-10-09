@@ -1,0 +1,105 @@
+export const meta = {
+  title: 'CleanBG、remove.bg 与 Canva：2026 年该用哪个抠图工具',
+  description:
+    '对照 CleanBG（浏览器本地）、remove.bg 与 Canva：隐私、费用、发丝、批量，以及 2026 年 12 月 1 日关站之后怎么选。',
+  created_at: '2026-09-20',
+  author_name: 'CleanBG',
+};
+
+remove.bg 把一键抠图做成了日常操作。Canva 收购之后，独立站点将在 **2026 年 12 月 1 日**并入编辑器。如果你只是想要一张透明 PNG，面前就变成三种完全不同的工具：设计套件、即将关闭的云端 API，以及一个根本看不到你文件的页面。
+
+下面做实用对比。关站时间线见 [remove.bg 公告说明](/blog/remove-bg-shutting-down-alternative)。
+
+## 一览
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>CleanBG</th>
+      <th>remove.bg（至 2026-12-01）</th>
+      <th>Canva 背景移除</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>照片去哪</th>
+      <td>留在当前标签页</td>
+      <td>上传到 remove.bg</td>
+      <td>上传进 Canva 设计稿</td>
+    </tr>
+    <tr>
+      <th>导出一张 PNG 的成本</th>
+      <td>免费，没有积分</td>
+      <td>有免费额度，之后靠积分（关站作废）</td>
+      <td>在 Canva 内，多为 Pro 功能</td>
+    </tr>
+    <tr>
+      <th>批量</th>
+      <td>浏览器排队，可下载 ZIP</td>
+      <td>积分 / API</td>
+      <td>一次一张设计稿，另有套餐限制</td>
+    </tr>
+    <tr>
+      <th>API</th>
+      <td>没有（刻意不提供）</td>
+      <td>自助 API 迁往 Leonardo.Ai</td>
+      <td>Canva / Leonardo 体系</td>
+    </tr>
+    <tr>
+      <th>首次访问后离线</th>
+      <td>模型缓存后可以</td>
+      <td>不可以</td>
+      <td>不可以</td>
+    </tr>
+    <tr>
+      <th>更适合</th>
+      <td>在意隐私，或不想数积分</td>
+      <td>花掉剩余积分、企业合同</td>
+      <td>已经在 Canva 里排版的人</td>
+    </tr>
+  </tbody>
+</table>
+
+## 隐私
+
+云端抠图必须先收到像素。公开商品图通常没问题；家庭照、证件、未发布包装、有 NDA 的客户图，就不该作为默认选项。
+
+CleanBG 没有上传接口。抠图时 Network 面板应只看到模型下载（每台设备一次），不应出现你的 JPEG 离开浏览器。权重缓存之后可以断网继续用。详见 [不上传的背景移除](/blog/no-upload-background-remover)。
+
+Canva 的移除功能活在一份保存在 Canva 账号里的设计稿中。这是另一种产品，并不能接替 remove.bg「上传、下载、关掉标签页」的用法。
+
+## 发丝和效果
+
+remove.bg 把消费级发丝、毛发的标准定得很高。CleanBG 的高质量模式会对主体做第二次放大推理，再在原图分辨率上做导向滤波抠图——云端模型做的是同一件事，只是换到你的 GPU（有 WebGPU 时），否则走更轻的 CPU 模型。
+
+可以预期：
+
+- 人像、宠物、轮廓清楚的商品：多数照片接近。
+- 细碎飞发：高质量模式有帮助；低端手机走 WASM 会更慢、边缘稍软。
+- 玻璃、烟雾、鱼线：所有自动蒙版都在猜。三者都不是影视级 roto 工具。
+
+如果发丝就是全部工作，而你已经在付 Canva Pro，继续留在 Canva 是合理的。如果只想要一张切图、不想被编辑器包围，本地工具更少摩擦。
+
+## 速度和设备
+
+桌面版 Chrome / Edge 配较新的 GPU：模型热起来之后大约一两秒一张。Safari、Firefox 和手机回退到 WebAssembly，更慢，但仍然在本地，仍然免费。
+
+remove.bg 和 Canva 在网好的时候很快，因为机房 GPU 已经热着。断网、飞机上、或不允许上传时，它们帮不上忙。
+
+## 批量、格式，以及 API 缺口
+
+CleanBG 接受 JPEG、PNG、WebP 和 HEIC（在标签页内解码），可以排队多张并打包 ZIP。没有服务端批量 API，也不会有：API 本身就是上传接口。
+
+remove.bg 的自助 API 被指向 Leonardo.Ai，认证和请求格式都不同。企业合同继续有效。如果你的流水线是 `POST 图片 → PNG`，需要另做改造；浏览器工具替不了这条链路。
+
+Canva 是设计画布。导出五十张透明 PNG 做得到，但不是这个编辑器存在的理由。
+
+## 怎么选
+
+- **已经在 Canva 里排版。** 用 Canva 自带的移除。为了 PNG 再换工具、再传回去，是多余动作。
+- **还剩 remove.bg 积分。** 在 2026 年 12 月 1 日前用完，过期作废。
+- **需要 API。** Leonardo.Ai 或其他云端抠图 API。CleanBG 形状不对。
+- **文件必须留在设备上，或不想再数积分。** 用 [CleanBG](/zh#tool)。按你要的结果进入：[白底](/zh/white-background)、[透明 PNG](/zh/transparent-png)、[Logo](/zh/logo)、[人像白底](/zh/passport-photo)（不是官方证件照），或 [iPhone HEIC](/zh/iphone-heic)。
+
+我们这边还要继续做的，和所有本地模型一样：小主体上的头发，以及慢网络上的首次下载。隐私约定不会变。

@@ -1,0 +1,105 @@
+export const meta = {
+  title: 'CleanBG vs remove.bg vs Canva: which background remover to use in 2026',
+  description:
+    'A side-by-side of in-browser CleanBG, remove.bg, and Canva after the 1 December 2026 shutdown — privacy, cost, hair quality, batch work, and APIs.',
+  created_at: '2026-09-20',
+  author_name: 'CleanBG',
+};
+
+remove.bg made one-click cutouts ordinary. Canva now owns that product and is folding the standalone site into its editor on **1 December 2026**. If you just need a subject on a transparent PNG, you suddenly have three different shapes of tool: a design suite, a soon-to-close cloud API, and a page that never sees your file.
+
+This is the practical comparison. For the shutdown timeline itself, see [what remove.bg announced](/blog/remove-bg-shutting-down-alternative).
+
+## At a glance
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>CleanBG</th>
+      <th>remove.bg (until 1 Dec 2026)</th>
+      <th>Canva Background Remover</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Where the photo goes</th>
+      <td>Stays in the tab</td>
+      <td>Uploaded to remove.bg</td>
+      <td>Uploaded into a Canva design</td>
+    </tr>
+    <tr>
+      <th>Cost for a PNG cutout</th>
+      <td>Free, no credits</td>
+      <td>Free tier, then credits that expire at shutdown</td>
+      <td>Inside Canva; often a Pro feature</td>
+    </tr>
+    <tr>
+      <th>Batch</th>
+      <td>Queue in the browser, ZIP download</td>
+      <td>Credits / API</td>
+      <td>One design at a time, plus Magic Studio limits</td>
+    </tr>
+    <tr>
+      <th>API</th>
+      <td>None (on purpose)</td>
+      <td>Self-serve API moves to Leonardo.Ai</td>
+      <td>Canva / Leonardo ecosystem</td>
+    </tr>
+    <tr>
+      <th>Offline after first visit</th>
+      <td>Yes, once the model is cached</td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <th>Best fit</th>
+      <td>Privacy-sensitive or unlimited one-offs</td>
+      <td>Existing credits, enterprise contracts</td>
+      <td>People already editing in Canva</td>
+    </tr>
+  </tbody>
+</table>
+
+## Privacy
+
+Cloud removers have to receive the pixels. That is fine for a public product shot. It is a poor default for family photos, ID scans, unreleased packaging, or client work under NDA.
+
+CleanBG has no upload endpoint. The Network tab during a cutout should show the model download (once per device) and nothing that looks like your JPEG leaving. After the weights are cached you can disconnect and keep working. Details: [a no-upload background remover](/blog/no-upload-background-remover).
+
+Canva's remover lives inside a document that is stored on Canva's account. That is a different product, not a drop-in privacy replacement for remove.bg's "upload, download, close the tab" habit.
+
+## Quality and hair
+
+remove.bg set the consumer bar for hair and fur. CleanBG's Quality mode runs a second, zoomed pass on the subject and then a guided-filter matte at full resolution, which is the same job those cloud models do — on your GPU when WebGPU is available, otherwise on a lighter CPU model.
+
+Expect:
+
+- People, pets, and solid products: close for most photos.
+- Fine flyaways: Quality mode helps; a cheap phone on WASM will be slower and a bit softer.
+- Glass, smoke, fishing line: every automatic matte still guesses. None of the three is a VFX plate tool.
+
+If hair is the whole job and you already pay for Canva Pro, staying in Canva is reasonable. If you want the cutout without an editor around it, a local tool is less friction.
+
+## Speed and devices
+
+Desktop Chrome or Edge with a recent GPU: about a second or two per image after the model is warm. Safari, Firefox, and phones fall back to WebAssembly. That is slower, still local, and still free.
+
+remove.bg and Canva feel instant when the network is good because a datacenter GPU is already hot. They feel like nothing when you are offline, on a plane, or blocked from uploading.
+
+## Batch, formats, and the API hole
+
+CleanBG accepts JPEG, PNG, WebP, and HEIC (decoded in the tab), queues several files, and can zip the results. There is no server-side batch API, and there will not be: an API would be an upload endpoint.
+
+remove.bg's self-serve API is being pointed at Leonardo.Ai, with a different auth scheme and payload. Enterprise contracts continue. If your pipeline is `POST image → PNG`, budget a rewrite; a browser tool will not replace that.
+
+Canva is a design surface. Exporting fifty transparent PNGs is possible; it is not what the editor is for.
+
+## Who should pick what
+
+- **Already in Canva, laying out a post.** Use Canva's remover. Switching tools to get a PNG you then re-upload is wasted motion.
+- **Have leftover remove.bg credits.** Spend them before 1 December 2026. After that date they are gone.
+- **Need an API.** Leonardo.Ai or another cloud matting API. CleanBG is the wrong shape.
+- **Need the file to stay on the device, or you are tired of credits.** Use [CleanBG](/#tool). Start from the export you need: [white background](/white-background), [transparent PNG](/transparent-png), [logo](/logo), [a private portrait background](/passport-photo) (not an official ID photo), or [an iPhone HEIC file](/iphone-heic).
+
+The remaining work on our side is the same as any local model: better hair on small subjects, and a lighter first download on slow networks. The privacy contract does not change.

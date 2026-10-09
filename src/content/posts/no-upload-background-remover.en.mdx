@@ -1,0 +1,31 @@
+export const meta = {
+  title: 'A no-upload background remover: when privacy is the feature',
+  description:
+    'Family photos, ID scans and unreleased designs should not have to visit someone else’s GPU. Here is how to remove a background without sending the file to the cloud.',
+  created_at: '2026-09-20',
+  author_name: 'CleanBG',
+};
+
+## The privacy problem with “free” removers
+
+Most free background removers are free because your image is the product: it is uploaded, processed on a rented GPU, sometimes logged, and often capped so you will pay later. For a public product shot that may be fine. For a passport photo, a child’s portrait, or a design that is not public yet, it is an unnecessary leak.
+
+remove.bg made this trade-off mainstream. Its standalone site is closing on 1 December 2026, and the replacement path is Canva — still the cloud.
+
+## What “no upload” has to mean
+
+A genuine local tool has no image-upload endpoint. The page can download a model (that is a public static file, like a font). After that, `fetch()` of your JPEG should not appear in the Network tab. If you disconnect Wi-Fi and the tool still works, you are not imagining it.
+
+CleanBG is built that way on purpose. Processing happens in a Web Worker. The result PNG is composed on a canvas in memory. Closing the tab drops everything.
+
+## Who this is for
+
+- People who would not email the photo to a stranger
+- Teams that cannot put client files on a third-party AI API
+- Anyone who is tired of credit counters
+
+What it is not: a 10,000-image overnight batch renderer. Your laptop is the cluster. A handful of images, or a few dozen, is the sweet spot — and you can queue them and download a ZIP.
+
+## Start local
+
+Drop a file on [CleanBG](/#tool). Use Quality mode if hair matters. For iPhone photos, HEIC is accepted and decoded on the device.

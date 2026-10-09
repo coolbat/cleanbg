@@ -8,7 +8,7 @@ import { getLocalPosts, loadLocalPost } from './index';
  * no database behind this site.
  */
 export const getBlogPostsFn = createServerFn()
-  .inputValidator((data: { locale: string; limit?: number }) => data)
+  .validator((data: { locale: string; limit?: number }) => data)
   .handler(async ({ data }) => {
     const posts = getLocalPosts(data.locale);
     return data.limit ? posts.slice(0, data.limit) : posts;
@@ -19,7 +19,7 @@ export const getBlogPostsFn = createServerFn()
  * the MDX Content from the bundled glob map (components don't serialize).
  */
 export const getBlogPostFn = createServerFn()
-  .inputValidator((data: { slug: string; locale: string }) => data)
+  .validator((data: { slug: string; locale: string }) => data)
   .handler(async ({ data }): Promise<BlogPostDetail | null> => {
     const mod = loadLocalPost(data.slug, data.locale);
     if (!mod) return null;

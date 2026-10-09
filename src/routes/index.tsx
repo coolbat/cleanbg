@@ -9,6 +9,8 @@ import { Footer } from '@/blocks/footer';
 import { envConfigs } from '@/config';
 import { getBlogPostsFn } from '@/content/posts/server';
 import { Remover } from '@/features/remover/remover';
+import { IntentLinks } from '@/features/intent/page';
+import { localeAlternateLinks, shareMeta } from '@/lib/seo';
 import { m } from '@/paraglide/messages.js';
 import { getLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
 
@@ -23,6 +25,9 @@ function HomePage() {
         <section id="tool" className="px-4 pb-24 scroll-mt-20">
           <div className="mx-auto max-w-4xl">
             <Remover />
+            <div className="mt-8">
+              <IntentLinks />
+            </div>
           </div>
         </section>
         <Features />
@@ -47,27 +52,16 @@ export const Route = createFileRoute('/')({
       localizeUrl(`${envConfigs.app_url}/`, {
         locale: loc as (typeof locales)[number],
       }).href;
-    const title = `${envConfigs.app_name} — ${m['landing.hero.headline']({}, { locale })}`;
+    const title = m['landing.meta.title']({}, { locale });
     const description = m['landing.hero.subheadline']({}, { locale });
     const faq = getFaqItems();
     return {
       meta: [
-        { title },
-        { name: 'description', content: description },
-        { property: 'og:type', content: 'website' },
-        { property: 'og:title', content: title },
-        { property: 'og:description', content: description },
-        { property: 'og:url', content: urlFor(locale) },
-        { name: 'twitter:card', content: 'summary_large_image' },
+        ...shareMeta(title, description, urlFor(locale)),
       ],
       links: [
         { rel: 'canonical', href: urlFor(locale) },
-        ...locales.map((loc) => ({
-          rel: 'alternate',
-          hrefLang: loc,
-          href: urlFor(loc),
-        })),
-        { rel: 'alternate', hrefLang: 'x-default', href: urlFor('en') },
+        ...localeAlternateLinks('/'),
       ],
       scripts: [
         {
@@ -78,6 +72,7 @@ export const Route = createFileRoute('/')({
               '@type': 'WebApplication',
               name: envConfigs.app_name,
               url: urlFor(locale),
+              email: 'hello@cleanbg.app',
               applicationCategory: 'MultimediaApplication',
               operatingSystem: 'Any',
               browserRequirements: 'Requires a modern browser with WebAssembly',

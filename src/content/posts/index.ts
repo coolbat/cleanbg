@@ -12,7 +12,12 @@ import { baseLocale } from '@/paraglide/runtime.js';
  * local posts via the pure helpers below.
  */
 export const BLOG_POST_SLUGS: readonly string[] = [
+  'cleanbg-vs-remove-bg-and-canva',
   'remove-bg-shutting-down-alternative',
+  'how-in-browser-background-removal-works',
+  'no-upload-background-remover',
+  'remove-background-from-product-photos',
+  'batch-remove-backgrounds-in-browser',
 ];
 
 export type BlogPostMeta = {

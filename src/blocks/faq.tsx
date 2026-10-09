@@ -31,6 +31,14 @@ export function getFaqItems(): FaqItem[] {
       question: m["landing.faq.free.question"](),
       answer: m["landing.faq.free.answer"](),
     },
+    {
+      question: m["landing.faq.heic.question"](),
+      answer: m["landing.faq.heic.answer"](),
+    },
+    {
+      question: m["landing.faq.batch.question"](),
+      answer: m["landing.faq.batch.answer"](),
+    },
   ];
 }
 

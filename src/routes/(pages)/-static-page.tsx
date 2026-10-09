@@ -3,6 +3,7 @@ import { m } from "@/paraglide/messages.js";
 import type { ComponentType } from 'react';
 
 import { envConfigs } from '@/config';
+import { localeAlternateLinks, shareMeta } from '@/lib/seo';
 import { baseLocale, getLocale, localizeUrl } from '@/paraglide/runtime.js';
 
 type PageMeta = {
@@ -52,10 +53,12 @@ export function staticPageRouteOptions(slug: string) {
       }).href;
       return {
         meta: [
-          { title: meta.title },
-          { name: 'description', content: meta.description },
+        ...shareMeta(meta.title, meta.description, canonical),
         ],
-        links: [{ rel: 'canonical', href: canonical }],
+        links: [
+          { rel: 'canonical', href: canonical },
+          ...localeAlternateLinks(`/${slug}`),
+        ],
       };
     },
     component: StaticPage,

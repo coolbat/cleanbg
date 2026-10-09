@@ -32,7 +32,8 @@ export function SiteHeader({
     <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         {/* Brand */}
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center gap-2">
+          <img src="/logo.png" alt="" width={32} height={32} className="size-8 rounded-lg" />
           <span className="font-serif italic text-lg">{envConfigs.app_name}</span>
         </Link>
 

@@ -19,7 +19,8 @@
     "incremental": true,
     "types": [
       "vite/client",
-      "@webgpu/types"
+      "@webgpu/types",
+      "node"
     ],
     "paths": {
       "@/*": [

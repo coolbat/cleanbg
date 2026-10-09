@@ -1,7 +1,7 @@
 export const meta = {
   title: 'Privacy Policy',
   description: 'CleanBG processes your images entirely in your browser. Nothing you upload is ever sent to a server.',
-  updated_at: '2026-09-18',
+  updated_at: '2026-09-20',
 };
 
 ## The short version
@@ -20,6 +20,7 @@ You can verify this yourself: open your browser's developer tools, watch the Net
 
 - **Server logs.** Like every website, our hosting provider (Cloudflare) records standard request logs — IP address, user agent, requested page and time — for security and abuse prevention. These logs never contain image data.
 - **Analytics.** If enabled, we use privacy-respecting, aggregate page analytics (page views, country, browser family). We do not track individual users across sites and we never log filenames, image dimensions or pixel data.
+- **Anonymous engine diagnostics.** If a model fails to start, the browser may POST a tiny JSON payload to `/e` with the engine name (for example `ben2:webgpu`), a short error class, and whether the failure was persistent. This contains no filenames, image dimensions or pixels. We use it only to see which browsers cannot run a given model.
 - **Local storage.** CleanBG stores a small amount of data in your browser (`localStorage` and Cache Storage) to remember your language, theme and which model configuration works on your device. This stays on your device.
 
 ## Data we do not collect
@@ -46,6 +47,10 @@ CleanBG is built on open models released under the MIT license. The weights are 
 - **BiRefNet** by Zheng Peng et al. — [github.com/ZhengPeng7/BiRefNet](https://github.com/ZhengPeng7/BiRefNet), browser-ready 512px export [studioludens/birefnet-lite-512](https://huggingface.co/studioludens/birefnet-lite-512).
 - **Transformers.js** and **ONNX Runtime Web** run the models in the browser (Apache-2.0 / MIT).
 
+<h2 id="heic">HEIC photos</h2>
+
+Safari can decode iPhone HEIC files natively. Other browsers load a local copy of [heic-to](https://github.com/hoppergee/heic-to) / libheif (LGPL-3.0) **only when you open a HEIC file**. Conversion happens in your tab; the photo is not sent to us. Full notice and source links: [Licenses](/licenses).
+
 ## Contact
 
-Questions about privacy? Open an issue on the project repository or reach out via the links in the footer.
+Questions about privacy? Email [hello@cleanbg.app](mailto:hello@cleanbg.app).

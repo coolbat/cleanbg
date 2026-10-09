@@ -1,7 +1,7 @@
 export const meta = {
   title: '隐私政策',
   description: 'CleanBG 完全在你的浏览器内处理图片，你的图片不会被发送到任何服务器。',
-  updated_at: '2026-09-18',
+  updated_at: '2026-09-20',
 };
 
 ## 一句话版本
@@ -20,6 +20,7 @@ CleanBG 没有任何上传接口。去除背景时，AI 模型直接在你的浏
 
 - **服务器日志。** 和所有网站一样，托管服务商（Cloudflare）会记录标准请求日志——IP 地址、User Agent、访问页面和时间——用于安全与防滥用。日志中永远不会包含图片数据。
 - **统计分析。** 如启用，我们使用尊重隐私的聚合页面统计（页面浏览量、国家、浏览器类型）。我们不跨站追踪个人用户，也绝不记录文件名、图片尺寸或像素数据。
+- **匿名引擎诊断。** 若某个模型无法启动，浏览器可能向 `/e` 发送一条很小的 JSON，内容仅包括引擎名称（例如 `ben2:webgpu`）、简短的错误类别，以及这次失败是否被记住。其中不含文件名、图片尺寸或像素。我们只用它来了解哪些浏览器跑不了某个模型。
 - **本地存储。** CleanBG 会在你的浏览器中保存少量数据（`localStorage` 与 Cache Storage），用于记住语言、主题以及在你的设备上可用的模型配置。这些数据只保存在你的设备上。
 
 ## 我们不会收集的数据
@@ -46,6 +47,10 @@ CleanBG 基于 MIT 许可发布的开源模型构建。模型权重下载到你�
 - **BiRefNet**，Zheng Peng 等人出品 — [github.com/ZhengPeng7/BiRefNet](https://github.com/ZhengPeng7/BiRefNet)，浏览器适配的 512px 导出 [studioludens/birefnet-lite-512](https://huggingface.co/studioludens/birefnet-lite-512)。
 - **Transformers.js** 与 **ONNX Runtime Web** 负责在浏览器中运行模型（Apache-2.0 / MIT）。
 
+<h2 id="heic">HEIC 照片</h2>
+
+Safari 能原生解码 iPhone 的 HEIC。其他浏览器仅在你打开 HEIC 文件时，才会在本地加载 [heic-to](https://github.com/hoppergee/heic-to) / libheif（LGPL-3.0）。转换发生在当前标签页，照片不会发送给我们。完整说明与源码链接见[许可证](/licenses)。
+
 ## 联系我们
 
-对隐私有疑问？请在项目仓库提交 issue，或通过页脚链接联系我们。
+对隐私有疑问？请发邮件到 [hello@cleanbg.app](mailto:hello@cleanbg.app)。

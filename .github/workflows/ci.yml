@@ -1,0 +1,40 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm cf:build
+        env:
+          VITE_APP_URL: https://cleanbg.app
+          VITE_APP_NAME: CleanBG
+          VITE_APP_DESCRIPTION: Free background remover that runs entirely in your browser. No uploads, no limits.
+          VITE_MODEL_HOST: /models
+          VITE_GITHUB_URL: https://github.com/coolbat/cleanbg
+      - run: pnpm typecheck
+      - name: Deploy Worker
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
