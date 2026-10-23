@@ -2,15 +2,30 @@
 
 > Free in-browser background remover. Photos are never uploaded.
 
-- Home: https://cleanbg.app/
-- White background: https://cleanbg.app/white-background
-- Transparent PNG: https://cleanbg.app/transparent-png
-- Logo: https://cleanbg.app/logo
-- Portrait background (not an official ID photo): https://cleanbg.app/passport-photo
-- iPhone HEIC: https://cleanbg.app/iphone-heic
-- Blog: https://cleanbg.app/blog
-- Privacy: https://cleanbg.app/privacy-policy
-- Terms: https://cleanbg.app/terms-of-service
-- Licenses: https://cleanbg.app/licenses
+Processing uses MIT-licensed ONNX models (BEN2, BiRefNet Lite) via Transformers.js and ONNX Runtime Web in a Web Worker on your device. There is no image upload API. Chinese pages live under /zh/.
 
-Processing uses MIT-licensed ONNX models (BEN2, BiRefNet lite) via Transformers.js and ONNX Runtime Web, running in a Web Worker on the visitor's device. There is no image-upload API. Chinese pages live under /zh/.
+## Tool
+
+- [CleanBG background remover](https://cleanbg.app/): Remove image backgrounds in your browser; images stay on your device.
+- [White background](https://cleanbg.app/white-background): Export cutouts on a white background for product and profile photos.
+- [Transparent PNG](https://cleanbg.app/transparent-png): Export a transparent PNG cutout from a photo.
+- [Logo background removal](https://cleanbg.app/logo): Remove backgrounds from logos in the browser.
+- [Portrait background](https://cleanbg.app/passport-photo): Portrait cutouts for photos (not an official ID photo service).
+- [iPhone HEIC](https://cleanbg.app/iphone-heic): Remove backgrounds from iPhone HEIC photos in the browser.
+- [Blog](https://cleanbg.app/blog): Guides on background removal, privacy, and running AI in the browser.
+
+## Blog
+
+- [How in-browser background removal works](https://cleanbg.app/blog/how-in-browser-background-removal-works): Explains local models, WebGPU, ONNX, caching, and privacy.
+- [A no-upload background remover](https://cleanbg.app/blog/no-upload-background-remover): Discusses local processing and privacy considerations for background removal.
+- [Remove backgrounds from product photos](https://cleanbg.app/blog/remove-background-from-product-photos): A browser-based workflow for product image cutouts and exports.
+- [Batch-remove backgrounds in the browser](https://cleanbg.app/blog/batch-remove-backgrounds-in-browser): Describes local image queues, mask editing, and ZIP downloads.
+- [CleanBG vs remove.bg vs Canva](https://cleanbg.app/blog/cleanbg-vs-remove-bg-and-canva): Compares background removal tools, including privacy, cost, and batch workflows.
+- [remove.bg shutdown and alternatives](https://cleanbg.app/blog/remove-bg-shutting-down-alternative): Covers the announced shutdown and options for continuing background removal.
+
+## Optional
+
+- [Privacy Policy](https://cleanbg.app/privacy-policy): Describes image processing, data collection, and local browser storage.
+- [Terms of Service](https://cleanbg.app/terms-of-service): Terms for using CleanBG's free browser-based background remover.
+- [Licenses](https://cleanbg.app/licenses): Lists licenses for the models and libraries used by CleanBG.
+- [Sitemap](https://cleanbg.app/sitemap.xml): Sitemap for the site.
