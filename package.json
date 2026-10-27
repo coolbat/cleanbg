@@ -8,7 +8,7 @@
     "build": "vite build",
     "start": "node .output/server/index.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/lib/bg/matte.test.ts src/lib/bg/capabilities.test.ts src/lib/bg/image.test.ts src/lib/bg/compose.test.ts src/lib/serve-telemetry.test.ts",
+    "test": "tsx --test src/lib/bg/matte.test.ts src/lib/bg/capabilities.test.ts src/lib/bg/image.test.ts src/lib/bg/compose.test.ts src/lib/serve-telemetry.test.ts src/lib/short-path-redirect.test.ts",
     "cf:build": "NITRO_PRESET=cloudflare_module vite build",
     "cf:preview": "pnpm cf:build && wrangler dev",
     "cf:deploy": "pnpm cf:build && wrangler deploy",

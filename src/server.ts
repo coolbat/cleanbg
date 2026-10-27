@@ -3,6 +3,7 @@ import handler from '@tanstack/react-start/server-entry';
 import { SECURITY_HEADERS } from './lib/security-headers';
 import { serveModel, type R2BucketLike } from './lib/serve-models';
 import { serveTelemetry } from './lib/serve-telemetry.ts';
+import { shortPathRedirect } from './lib/short-path-redirect.ts';
 
 import { paraglideMiddleware } from './paraglide/server.js';
 
@@ -49,7 +50,7 @@ async function modelsBucket(env?: WorkerEnv): Promise<R2BucketLike | null> {
 // the cross-origin-isolation headers to HTML responses.
 export default {
   async fetch(req: Request, env?: WorkerEnv): Promise<Response> {
-    const redirect = apexRedirect(req);
+    const redirect = shortPathRedirect(req) ?? apexRedirect(req);
     if (redirect) return redirect;
 
     const url = new URL(req.url);
