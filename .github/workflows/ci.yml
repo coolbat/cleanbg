@@ -30,6 +30,7 @@ jobs:
           VITE_APP_DESCRIPTION: Free background remover that runs entirely in your browser. No uploads, no limits.
           VITE_MODEL_HOST: /models
           VITE_GITHUB_URL: https://github.com/coolbat/cleanbg
+          VITE_GA_ID: G-66SMV2XVQ9
       - run: pnpm typecheck
       - name: Deploy Worker
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

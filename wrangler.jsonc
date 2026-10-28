@@ -11,7 +11,8 @@
     "VITE_APP_URL": "https://cleanbg.app",
     "VITE_APP_NAME": "CleanBG",
     "VITE_MODEL_HOST": "/models",
-    "VITE_GITHUB_URL": "https://github.com/coolbat/cleanbg"
+    "VITE_GITHUB_URL": "https://github.com/coolbat/cleanbg",
+    "VITE_GA_ID": "G-66SMV2XVQ9"
   },
   "r2_buckets": [
     {
